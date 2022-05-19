@@ -132,7 +132,7 @@ int main()
     string2ByteArray(value, arr);
 
     // printing
-    printf("ascii_str: %s\n", value);
+    printf("utf8 string: %s\n", value);
     printf("byte array is...\n");
     for (i = 0; i < len; i++)
     {
