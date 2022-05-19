@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+typedef unsigned char BYTE;
 
 void marker()
 {
@@ -19,6 +21,20 @@ int utf8strlen2(char *s)
         }
     }
     return cnt;
+}
+
+void string2ByteArray(char *input, BYTE *output)
+{
+    int loop;
+    int i;
+
+    loop = 0;
+    i = 0;
+
+    while (input[loop] != '\0')
+    {
+        output[i++] = input[loop++];
+    }
 }
 
 int main()
@@ -106,10 +122,23 @@ int main()
     int size = utf8strlen2(value);
     printf("The size is %d\n", size);
 
-    
     printf("The length in 2 bytes is %x\n", size);
 
-    
+    int combined = 0x0 & 0xff;
+
+    int len = strlen(value);
+    BYTE arr[len];
+    int i;
+    string2ByteArray(value, arr);
+
+    // printing
+    printf("ascii_str: %s\n", value);
+    printf("byte array is...\n");
+    for (i = 0; i < len; i++)
+    {
+        printf("%c - %d\n", value[i], arr[i]);
+    }
+    printf("\n");
 
     // end of question 2
 
