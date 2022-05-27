@@ -8,33 +8,27 @@ void marker()
     printf("===========================================\n");
 }
 
-int utf8strlen2(char *s)
+int getUtf8StringLength(char *s)
 {
-    int cnt = 0;
-    while (*s)
+    int i = 0, j = 0;
+    while (s[i])
     {
-        cnt++;
-        if ((*s++ & 0xc0) == 0x0c0)
-        {                               /* binary is 11xxxxxx */
-            while ((*s & 0xc0) == 0x80) /* binary code is 10xxxxxx */
-                s++;
+        // 0xco is 1100 0000 - anding means that we are interested in the first 2 bits
+        // 0x80 is 1000 0000 - 
+        if ((s[i] & 0xc0) != 0x80)
+        {
+            printf("%x is counting 1\n", s[i]);
+            j++;
         }
+        else
+        {
+            printf("%c is counting 2\n", s[i]);
+            j+=2;
+        }
+
+        i++;
     }
-    return cnt;
-}
-
-void string2ByteArray(char *input, BYTE *output)
-{
-    int loop;
-    int i;
-
-    loop = 0;
-    i = 0;
-
-    while (input[loop] != '\0')
-    {
-        output[i++] = input[loop++];
-    }
+    return j;
 }
 
 int main()
@@ -69,9 +63,7 @@ int main()
         0x00,
         0x00,
         0x00,
-        0x00
-
-    };
+        0x00};
 
     int sourcePort = 0x0 & 0xff;
     sourcePort |= hexInput[0] & 0xff;
@@ -113,32 +105,27 @@ int main()
     // end of question 1
 
     // start question 2
+
+    // tag = 0x0424
+    // value = Hello Natujenge Σ!
+
     unsigned int tag = 0x0424;
+    printf("The tag is %x\n", tag);
 
-    char *value = "Hello Natujenge#";
+    char *value = "Hello Natujenge Σ!";
 
-    printf("The tag in bytes is %x\n", tag);
+    int characterCount = getUtf8StringLength(value);
+    printf("The number of characters is %d\n", characterCount);
 
-    int size = utf8strlen2(value);
-    printf("The size is %d\n", size);
+    short characterCountIn2Bytes = characterCount;
+    printf("The number of characters as 2 bytes is %x\n", characterCountIn2Bytes);
 
-    printf("The length in 2 bytes is %x\n", size);
+    char valueByteArray[19] = {};
 
-    int combined = 0x0 & 0xff;
-
-    int len = strlen(value);
-    BYTE arr[len];
-    int i;
-    string2ByteArray(value, arr);
-
-    // printing
-    printf("utf8 string: %s\n", value);
-    printf("byte array is...\n");
-    for (i = 0; i < len; i++)
+    for (int i = 0; i <= characterCount; i++)
     {
-        printf("%c - %d\n", value[i], arr[i]);
+        printf("Character is %c\n", value[i]);
     }
-    printf("\n");
 
     // end of question 2
 
